@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { DaemonSnapshot, DaemonState, InjectedEvent } from "./types";
+import type {
+  DaemonSnapshot,
+  DaemonState,
+  InjectedEvent,
+  Intentions,
+} from "./types";
 
 export function useDaemonState(pollMs = 2000) {
   const [snapshot, setSnapshot] = useState<DaemonSnapshot | null>(null);
@@ -60,6 +65,50 @@ export function useDaemonState(pollMs = 2000) {
     return data;
   }, []);
 
+  const workflowPost = useCallback(async (body: Record<string, unknown>) => {
+    const res = await fetch("/api/workflow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    setSnapshot(data as DaemonSnapshot);
+    return data;
+  }, []);
+
+  const saveObjectives = useCallback(
+    async (intentions: Intentions) => {
+      return patch({ intentions, objectivesLocked: true });
+    },
+    [patch],
+  );
+
+  const armWorkflow = useCallback(
+    async (event: InjectedEvent, intentions: Intentions) => {
+      return workflowPost({ action: "start", event, intentions });
+    },
+    [workflowPost],
+  );
+
+  const startWorkflowRun = useCallback(async () => {
+    return workflowPost({ action: "run" });
+  }, [workflowPost]);
+
+  const runWorkflowStep = useCallback(
+    async (stepId: string) => {
+      return workflowPost({ action: "step", stepId });
+    },
+    [workflowPost],
+  );
+
+  const runWorkflowAll = useCallback(async () => {
+    return workflowPost({ action: "run_all" });
+  }, [workflowPost]);
+
+  const clearWorkflow = useCallback(async () => {
+    return workflowPost({ action: "clear" });
+  }, [workflowPost]);
+
   return {
     snapshot,
     loading,
@@ -68,5 +117,11 @@ export function useDaemonState(pollMs = 2000) {
     patch,
     injectEvent,
     runTick,
+    saveObjectives,
+    armWorkflow,
+    startWorkflowRun,
+    runWorkflowStep,
+    runWorkflowAll,
+    clearWorkflow,
   };
 }

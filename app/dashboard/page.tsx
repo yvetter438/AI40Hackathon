@@ -1,13 +1,26 @@
 "use client";
 
+import { DemoWorkflow } from "@/components/demo-workflow";
 import { useDaemonState } from "@/lib/use-daemon-state";
 import type { Policies } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function DashboardPage() {
-  const { snapshot, loading, error, patch, injectEvent, runTick } =
-    useDaemonState(2000);
+  const {
+    snapshot,
+    loading,
+    error,
+    patch,
+    injectEvent,
+    runTick,
+    saveObjectives,
+    armWorkflow,
+    startWorkflowRun,
+    runWorkflowStep,
+    runWorkflowAll,
+    clearWorkflow,
+  } = useDaemonState(2000);
   const [busy, setBusy] = useState(false);
 
   async function withBusy(fn: () => Promise<unknown>) {
@@ -73,6 +86,19 @@ export default function DashboardPage() {
       </header>
 
       <main className="mx-auto grid max-w-6xl gap-6 px-6 py-6 lg:grid-cols-3">
+        <DemoWorkflow
+          intentions={intentions}
+          objectivesLocked={snapshot.objectivesLocked}
+          workflow={snapshot.workflow}
+          busy={busy}
+          onSaveObjectives={(i) => withBusy(() => saveObjectives(i))}
+          onArmScenario={(event, i) => withBusy(() => armWorkflow(event, i))}
+          onStartRun={() => withBusy(() => startWorkflowRun())}
+          onRunStep={(id) => withBusy(() => runWorkflowStep(id))}
+          onRunAll={() => withBusy(() => runWorkflowAll())}
+          onClear={() => withBusy(() => clearWorkflow())}
+        />
+
         <section className="lg:col-span-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard label="Drift" value={`${metrics.driftPercent}%`} accent />
           <MetricCard
@@ -121,9 +147,9 @@ export default function DashboardPage() {
         </section>
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-950/80 p-5">
-          <h2 className="text-lg font-medium">Inject event</h2>
+          <h2 className="text-lg font-medium">Quick inject (legacy)</h2>
           <p className="mt-1 text-sm text-zinc-400">
-            Simulate life drift. DAEMON responds autonomously.
+            Runs full loop instantly — use the guided workflow above for demos.
           </p>
           <div className="mt-4 flex flex-col gap-2">
             <ActionButton
@@ -187,22 +213,8 @@ export default function DashboardPage() {
         </section>
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-950/80 p-5 lg:col-span-2">
-          <h2 className="text-lg font-medium">Objectives & observations</h2>
+          <h2 className="text-lg font-medium">Live state</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 text-sm">
-            <div className="space-y-2 rounded-xl bg-zinc-900/50 p-4">
-              <p className="text-xs uppercase tracking-wide text-zinc-500">
-                Intentions
-              </p>
-              <ul className="space-y-1 text-zinc-300">
-                <li>Sleep: {intentions.sleepHoursPerNight}h / night</li>
-                <li>Wake by: {intentions.wakeBy}</li>
-                <li>Workouts: {intentions.workoutsPerWeek}/week</li>
-                <li>Focus: {intentions.focusHoursPerDay}h / day</li>
-                <li>
-                  Screen budget: {intentions.screenBudgetHoursPerWeek}h / week
-                </li>
-              </ul>
-            </div>
             <div className="space-y-2 rounded-xl bg-zinc-900/50 p-4">
               <p className="text-xs uppercase tracking-wide text-zinc-500">
                 Observed

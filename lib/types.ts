@@ -64,6 +64,38 @@ export type InjectedEvent =
   | { type: "missed_workout" }
   | { type: "screen_over_budget"; hours: number };
 
+export type WorkflowPhase =
+  | "observe"
+  | "reason"
+  | "act"
+  | "verify"
+  | "measure";
+
+export type WorkflowStepStatus = "pending" | "done" | "skipped";
+
+export type WorkflowStep = {
+  id: string;
+  phase: WorkflowPhase;
+  title: string;
+  detail: string;
+  tool?: string;
+  status: WorkflowStepStatus;
+};
+
+export type WorkflowRunPhase =
+  | "objectives"
+  | "armed"
+  | "running"
+  | "complete";
+
+export type WorkflowRun = {
+  phase: WorkflowRunPhase;
+  event: InjectedEvent;
+  steps: WorkflowStep[];
+  startedAt: string | null;
+  completedAt: string | null;
+};
+
 export type DaemonState = {
   intentions: Intentions;
   observations: Observations;
@@ -74,6 +106,8 @@ export type DaemonState = {
   interventions: Intervention[];
   userDecisionsRequired: number;
   lastEvent: InjectedEvent | null;
+  objectivesLocked: boolean;
+  workflow: WorkflowRun | null;
   updatedAt: string;
 };
 

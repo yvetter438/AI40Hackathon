@@ -58,6 +58,8 @@ function defaultState(): DaemonState {
     interventions: [],
     userDecisionsRequired: 0,
     lastEvent: null,
+    objectivesLocked: false,
+    workflow: null,
     updatedAt: new Date().toISOString(),
   };
 }
