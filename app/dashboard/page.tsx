@@ -73,13 +73,13 @@ export default function DashboardPage() {
               href="/calendar"
               className="rounded-lg border border-zinc-700 px-3 py-2 hover:bg-zinc-900"
             >
-              Open Calendar PWA
+              Open Calendar
             </Link>
             <Link
               href="/clock"
               className="rounded-lg border border-zinc-700 px-3 py-2 hover:bg-zinc-900"
             >
-              Open Clock PWA
+              Open Clock
             </Link>
           </div>
         </div>
@@ -271,31 +271,6 @@ export default function DashboardPage() {
               ))
             )}
           </ul>
-        </section>
-
-        <section className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/40 p-5 lg:col-span-3">
-          <h2 className="text-lg font-medium">Add to Home Screen (iPhone)</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-zinc-400">
-            <li>
-              Open{" "}
-              <Link href="/calendar" className="text-zinc-200 underline">
-                /calendar
-              </Link>{" "}
-              in Safari → Share → <strong className="text-zinc-200">Add to Home Screen</strong> → name should show as{" "}
-              <strong className="text-zinc-200">Calendar</strong>.
-            </li>
-            <li>
-              Open{" "}
-              <Link href="/clock" className="text-zinc-200 underline">
-                /clock
-              </Link>{" "}
-              the same way → icon/name <strong className="text-zinc-200">Clock</strong>.
-            </li>
-            <li>
-              Run an inject event here, then switch to those apps — plan updates
-              poll every ~1.5s.
-            </li>
-          </ol>
         </section>
       </main>
     </div>

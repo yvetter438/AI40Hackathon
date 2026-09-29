@@ -11,14 +11,8 @@ npm run dev
 ```
 
 - **Dashboard:** http://localhost:3000/dashboard  
-- **Calendar (PWA):** http://localhost:3000/calendar  
-- **Clock / Alarms (PWA):** http://localhost:3000/clock  
-
-## iPhone home screen
-
-1. Open `/calendar` in **Safari** → Share → **Add to Home Screen** (title: **Calendar**).
-2. Open `/clock` in Safari → same flow (title: **Clock**).
-3. Use the dashboard to **Inject event** (e.g. poor sleep). Calendar and Clock refresh automatically.
+- **Calendar:** http://localhost:3000/calendar  
+- **Clock:** http://localhost:3000/clock  
 
 ## Deploy (Vercel)
 
